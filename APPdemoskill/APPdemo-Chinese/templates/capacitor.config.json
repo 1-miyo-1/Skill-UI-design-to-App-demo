@@ -1,0 +1,8 @@
+{
+  "appId": "com.example.app",
+  "appName": "您的APP",
+  "webDir": "dist",
+  "keyboard": {
+    "resize": "none"
+  }
+}

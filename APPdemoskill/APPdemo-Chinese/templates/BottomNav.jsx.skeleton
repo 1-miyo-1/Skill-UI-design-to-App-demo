@@ -1,0 +1,27 @@
+// 底部导航组件：复制本文件 → 改名 BottomNav.jsx 放 src/components/。
+// 通用走苹果 Tab Bar（约定见 00 §9）——3~5 个 tab、图标 + 文案、选中高亮品牌色。
+// TODO: 换成你项目的 tab（路由 + 图标 + 文案）；图标用 SF Symbols 或用户给的 icon 素材，没给先留灰块占位（见 00 §8）。
+import { NavLink } from 'react-router-dom'
+
+const TABS = [
+  { path: '/home', label: '首页' },
+  { path: '/tools', label: '工具' },
+  { path: '/profile', label: '我的' },
+]
+
+export default function BottomNav() {
+  return (
+    <nav className="bottom-nav">
+      {TABS.map((t) => (
+        <NavLink
+          key={t.path}
+          to={t.path}
+          className={({ isActive }) => 'bottom-nav__item' + (isActive ? ' is-active' : '')}
+        >
+          <span className="bottom-nav__icon" aria-hidden="true" />
+          <span className="bottom-nav__label">{t.label}</span>
+        </NavLink>
+      ))}
+    </nav>
+  )
+}

@@ -1,0 +1,57 @@
+import { useState, useEffect } from 'react'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import Splash from './screens/Splash'
+import Home from './screens/Home'
+// ...其余页面
+import BottomNav from './components/BottomNav'
+import VoiceFab from './components/VoiceFab'   // 约定见 references/00_project_conventions.md §9
+
+// 底部导航 / 悬浮球常驻的主界面路由集合（登录后的 tab 页）。
+// 通用：由设计稿页面清单推导，别照抄（见 00 §4 / 03）。
+const MAIN_ROUTES = ['/home', '/tools', '/profile'] // TODO: 换成你的 tab 路由
+
+export default function App() {
+  // —— 全局状态提升到这里（引导开关 / 联系人 / 紧急联系人 / 悬浮球位置）——
+  const [showGuide, setShowGuide] = useState(true)
+  // const [allowClicked, setAllowClicked] = useState(false)   // 已加联系人
+  // const [emergencySet, setEmergencySet] = useState(false)   // 已设紧急联系人
+  const [fabPos, setFabPos] = useState({ x: 50, y: 50 }) // TODO: 按设计稿初始位置
+
+  // —— 缩放铺屏：固定 390×844（量设计稿替换），等比 min、居中；只在宽度变化时重算 ——
+  useEffect(() => {
+    let lastW = -1
+    const applyScale = () => {
+      const w = window.innerWidth
+      if (w === lastW) return
+      lastW = w
+      document.documentElement.style.setProperty(
+        '--app-scale', String(Math.min(w / 390, window.innerHeight / 844))
+      )
+    }
+    applyScale()
+    window.addEventListener('resize', applyScale)
+    window.addEventListener('orientationchange', applyScale)
+    return () => {
+      window.removeEventListener('resize', applyScale)
+      window.removeEventListener('orientationchange', applyScale)
+    }
+  }, [])
+
+  return (
+    <div id="app-shell">
+      <div className="phone">
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<Splash />} />
+            <Route path="/home" element={<Home showGuide={showGuide} setShowGuide={setShowGuide} fabPos={fabPos} />} />
+            {/* ...其余路由 */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+          {/* 底部导航 + 语音球：主界面常驻（用 MAIN_ROUTES 判断显隐） */}
+          <BottomNav />
+          <VoiceFab glow={showGuide} pos={fabPos} setPos={setFabPos} onToggle={() => setShowGuide(v => !v)} />
+        </HashRouter>
+      </div>
+    </div>
+  )
+}

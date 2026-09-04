@@ -1,0 +1,134 @@
+/* 品牌字体（可选）：用户给了 .otf/.ttf 才加 @font-face，文件放 public/fonts/（见 00 §7）。
+   没给就用系统字体，下方 body 已用 -apple-system / PingFang，无需再声明。 */
+
+:root {
+  --brand: #FFFFFF;                 /* 主色：占位白，等用户品牌色（见 00 §6） */
+  --brand-grad: linear-gradient(#FFFFFF, #000000);  /* 渐变：占位 */
+  --bg: #FFFFFF;                    /* 背景 */
+  --bg-deep: #000000;               /* 深色背景 */
+  --ink: #000000;                   /* 主文字 */
+  --gray: #8E8E93;                  /* 次文字 */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent; /* 去点击蓝闪 */
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei",
+    "Segoe UI", sans-serif;
+  background: #161616;
+}
+
+#app-shell {
+  height: 100%;
+  display: flex;
+  align-items: center; /* 居中，与网页版一致 */
+  justify-content: center;
+  overflow: hidden;
+}
+
+.phone {
+  position: relative;
+  width: 390px;   /* 基准尺寸：默认 iOS 390×844，量设计稿替换（见 00 §2） */
+  height: 844px;
+  flex: none; /* ⚠️ 防 flex 压缩 */
+  background: #fff;
+  overflow: hidden;
+  transform: scale(var(--app-scale, 1));
+  transform-origin: center center;
+}
+
+/* 桌面预览：手机框 + 无缩放；手机端走上面的缩放 */
+@media (min-width: 520px) {
+  .phone {
+    width: auto;
+    height: 97vh;
+    max-width: 96vw;
+    aspect-ratio: 390 / 844;
+    transform: none;
+    border-radius: 30px;
+    box-shadow: 0 0 0 12px #0a0a0a, 0 30px 70px rgba(0, 0, 0, 0.55);
+  }
+}
+
+/* 页面基类：所有 .screen 页面共用 */
+.screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== 复用组件样式（StatusBar / BottomNav / VoiceFab，约定见 00 §9）===== */
+
+/* 状态栏：网页预览 mock，打 APK 前整体删 */
+.status-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 44px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #000;                 /* 浅色背景黑字；深色背景用 --light 切白字 */
+  z-index: 20;                 /* 见 00 §10 */
+}
+.status-bar--light { color: #fff; }
+.status-bar__time { font-size: 15px; font-weight: 600; }
+.status-bar__icons { display: flex; align-items: center; gap: 6px; }
+
+/* 底部导航：苹果 Tab Bar */
+.bottom-nav {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 83px;                /* 含底部安全区，按设计稿调 */
+  display: flex;
+  background: #fff;
+  border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+  z-index: 150;                /* 见 00 §10 */
+}
+.bottom-nav__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--gray);
+  text-decoration: none;
+}
+.bottom-nav__item.is-active { color: var(--brand); }  /* 占位白，等品牌色 */
+.bottom-nav__icon {
+  width: 24px; height: 24px;
+  border-radius: 6px;
+  background: #E5E5EA;         /* HIG 占位灰块，等用户 icon（见 00 §8） */
+}
+.bottom-nav__item.is-active .bottom-nav__icon { background: var(--brand); }
+.bottom-nav__label { font-size: 10px; }
+
+/* 语音悬浮球 */
+.voice-fab {
+  position: absolute;
+  width: 56px; height: 56px;
+  border: none;
+  border-radius: 50%;
+  background: var(--brand);    /* 占位白，等品牌色/icon 素材 */
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  cursor: grab;
+  z-index: 200;                /* 见 00 §10 */
+}
+.voice-fab.is-active {         /* 发光/旋转态，按设计稿做 */
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.08), 0 4px 18px rgba(0, 0, 0, 0.35);
+}
