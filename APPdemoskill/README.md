@@ -1,4 +1,7 @@
-# design-to-app · 设计稿转 App
+# design-to-app demo · 设计稿转 App 演示demo
+
+This document is only for the prototype testing of the APP, materials and documents need to be provided.
+该文件仅用于APP原型测试，需要提供素材和文件
 
 > **EN** — Turn a high-fidelity design mockup (Figma / image) into a runnable mobile app.
 > **中文** — 把高保真设计稿（Figma / 图片）转成可安装运行的移动 App。
